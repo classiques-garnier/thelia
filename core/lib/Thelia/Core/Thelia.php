@@ -48,6 +48,9 @@ use Symfony\Contracts\EventDispatcher\Event;
 use Thelia\Api\Bridge\Propel\Extension\QueryCollectionExtensionInterface;
 use Thelia\Api\Bridge\Propel\Extension\QueryItemExtensionInterface;
 use Thelia\Api\Bridge\Propel\Filter\FilterInterface;
+use Thelia\Api\Bridge\Propel\Hydrator\HydratorCollectionInterface;
+use Thelia\Api\Bridge\Propel\Hydrator\HydratorItemInterface;
+use Thelia\Api\Bridge\Propel\Hydrator\ItemHydratorInterface;
 use Thelia\Condition\Implementation\ConditionInterface;
 use Thelia\Controller\ControllerInterface;
 use Thelia\Core\Archiver\ArchiverInterface;
@@ -446,6 +449,8 @@ class Thelia extends Kernel
 
             QueryCollectionExtensionInterface::class => 'thelia.api.propel.query_extension.collection',
             QueryItemExtensionInterface::class => 'thelia.api.propel.query_extension.item',
+            HydratorItemInterface::class => 'thelia.api.propel.hydrator.item',
+            HydratorCollectionInterface::class => 'thelia.api.propel.hydrator.collection',
             FilterInterface::class => 'thelia.api.propel.filter',
         ];
 

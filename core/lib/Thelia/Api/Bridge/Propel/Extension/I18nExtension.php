@@ -36,14 +36,14 @@ final class I18nExtension implements QueryCollectionExtensionInterface, QueryIte
 
         $langs = LangQuery::create()->filterByActive(1)->find();
         $resourceName = (new \ReflectionClass($resourceClass))->getShortName();
-        $joinMethodName = 'join'.$resourceName.'I18n';
+        $joinMethodName = 'join' . $resourceName . 'I18n';
         foreach ($langs as $lang) {
-            $joinAlias = 'lang_'.$lang->getLocale().'_';
+            $joinAlias = 'lang_' . $lang->getLocale() . '_';
             $query->$joinMethodName($joinAlias);
-            $query->addJoinCondition($joinAlias, $joinAlias.'.locale = ?', $lang->getLocale(), null, \PDO::PARAM_STR);
+            $query->addJoinCondition($joinAlias, $joinAlias . '.locale = ?', $lang->getLocale(), null, \PDO::PARAM_STR);
 
             foreach ($resourceClass::getTranslatableFields() as $translatableField) {
-                $query->withColumn($joinAlias.'.'.$translatableField);
+                $query->withColumn($joinAlias . '.' . $translatableField);
             }
         }
     }

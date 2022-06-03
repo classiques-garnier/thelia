@@ -12,7 +12,6 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Thelia\Api\Bridge\Propel\State\PropelCollectionProvider;
 use Thelia\Core\Service\ConfigCacheService;
 use Thelia\Log\Tlog;
 use Thelia\Model\ConfigQuery;
@@ -31,7 +30,10 @@ return function (ContainerConfigurator $configurator): void {
         ->bind('$sessionSavePath', '%session.save_path%')
         ->bind('$theliaParserLoops', '%Thelia.parser.loops%')
         ->bind('$formDefinition', '%Thelia.parser.forms%')
-        ->bind('$propelCollectionExtensions', tagged_iterator('thelia.api.propel.query_extension.collection'));
+        ->bind('$propelCollectionExtensions', tagged_iterator('thelia.api.propel.query_extension.collection'))
+        ->bind('$propelItemExtensions', tagged_iterator('thelia.api.propel.query_extension.item'))
+        ->bind('$itemHydrators', tagged_iterator('thelia.api.propel.hydrator.item'))
+        ->bind('$collectionHydrators', tagged_iterator('thelia.api.propel.hydrator.collection'));
 
     $serviceConfigurator->load('Thelia\\', THELIA_LIB)
         ->exclude(

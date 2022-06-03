@@ -2,7 +2,6 @@
 
 namespace Thelia\Api\Bridge\Propel\Extension;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 
 interface QueryItemExtensionInterface
