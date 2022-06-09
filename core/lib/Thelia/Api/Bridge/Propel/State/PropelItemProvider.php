@@ -20,6 +20,7 @@ use Thelia\Api\Bridge\Propel\Extension\QueryItemExtensionInterface;
 use Thelia\Api\Bridge\Propel\Hydrator\ApiResourceHydrator;
 use Thelia\Api\Bridge\Propel\Hydrator\HydratorItemInterface;
 use Thelia\Api\Resource\PropelResourceInterface;
+use Thelia\Model\ProductQuery;
 
 class PropelItemProvider implements ProviderInterface
 {
@@ -39,7 +40,6 @@ class PropelItemProvider implements ProviderInterface
     {
         $resourceClass = $operation->getClass();
 
-
         if (!is_subclass_of($resourceClass, PropelResourceInterface::class)) {
             throw new RuntimeException('Bad provider');
         }
@@ -47,7 +47,7 @@ class PropelItemProvider implements ProviderInterface
         /** @var ModelCriteria $queryClass */
         $queryClass = $resourceClass::getPropelModelClass() . 'Query';
 
-        /** @var ModelCriteria $query */
+        /** @var ProductQuery $query */
         $query = $queryClass::create();
 
         foreach ($this->propelItemExtensions as $extension) {

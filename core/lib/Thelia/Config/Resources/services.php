@@ -12,11 +12,14 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Thelia\Api\Bridge\Propel\Extension\FilterExtension;
 use Thelia\Core\Service\ConfigCacheService;
 use Thelia\Log\Tlog;
 use Thelia\Model\ConfigQuery;
 use Thelia\Model\Module;
 use Thelia\Model\ModuleQuery;
+use Thelia\Api\Bridge\Propel\Filter\BooleanFilter;
+
 
 return function (ContainerConfigurator $configurator): void {
     $serviceConfigurator = $configurator->services();
@@ -38,20 +41,22 @@ return function (ContainerConfigurator $configurator): void {
     $serviceConfigurator->load('Thelia\\', THELIA_LIB)
         ->exclude(
             [
-                THELIA_LIB.'/Command/Skeleton/Module/I18n/*.php',
-                THELIA_LIB.'/Config/**/*.php',
+                THELIA_LIB . '/Command/Skeleton/Module/I18n/*.php',
+                THELIA_LIB . '/Config/**/*.php',
             ]
         )->autowire()
         ->autoconfigure();
+
+    $serviceConfigurator->get(FilterExtension::class)->arg('$locator', service('api_platform.filter_locator'));
 
     if (ConfigQuery::isSmtpEnable()) {
         $dsn = 'smtp://';
 
         if (ConfigQuery::getSmtpUsername()) {
-            $dsn .= ConfigQuery::getSmtpUsername().':'.ConfigQuery::getSmtpPassword();
+            $dsn .= ConfigQuery::getSmtpUsername() . ':' . ConfigQuery::getSmtpPassword();
         }
 
-        $dsn .= ConfigQuery::getSmtpHost().':'.ConfigQuery::getSmtpPort();
+        $dsn .= ConfigQuery::getSmtpHost() . ':' . ConfigQuery::getSmtpPort();
         $configurator->extension('framework', [
             'mailer' => [
                 'dsn' => $dsn,

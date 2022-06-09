@@ -12,13 +12,16 @@
 
 namespace Thelia\Api\Resource;
 
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Thelia\Api\Bridge\Propel\Filter\BooleanFilter;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['product:read']],
     denormalizationContext: ['groups' => ['product:write']]
 )]
+#[ApiFilter(BooleanFilter::class, properties: ['visible'] )]
 class Product implements PropelResourceInterface, TranslatableResourceInterface
 {
     #[Groups(['product:read'])]

@@ -92,6 +92,7 @@
 
     <services>
         <service id="Symfony\Component\DependencyInjection\ContainerInterface" alias="service_container"/>
+        <service id="Symfony\Component\Serializer\NameConverter\NameConverterInterface" alias="serializer.name_converter.metadata_aware"/>
         <service id="Psr\Container\ContainerInterface" alias="service_container"/>
 
         <!-- Thelia template helper -->

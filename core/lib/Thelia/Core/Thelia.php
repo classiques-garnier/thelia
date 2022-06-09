@@ -451,7 +451,6 @@ class Thelia extends Kernel
             QueryItemExtensionInterface::class => 'thelia.api.propel.query_extension.item',
             HydratorItemInterface::class => 'thelia.api.propel.hydrator.item',
             HydratorCollectionInterface::class => 'thelia.api.propel.hydrator.collection',
-            FilterInterface::class => 'thelia.api.propel.filter',
         ];
 
         foreach ($autoconfiguredInterfaces as $interfaceClass => $tag) {
