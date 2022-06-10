@@ -2,8 +2,7 @@
 
 namespace Thelia\Api\Bridge\Propel\Filter;
 
-use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
-use Doctrine\ORM\QueryBuilder;
+
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
@@ -28,9 +27,13 @@ abstract class AbstractFilter implements FilterInterface
         }
 
         foreach ($context['filters'] as $property => $value) {
+            if (!\array_key_exists($property, $this->properties)) {
+                continue;
+            }
             $this->filterProperty($this->denormalizePropertyName($property), $value, $query, $resourceClass, $operationName, $context);
         }
     }
+
 
     protected function normalizePropertyName($property)
     {

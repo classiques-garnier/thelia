@@ -7,6 +7,7 @@ use Propel\Runtime\ActiveQuery\ModelCriteria;
 
 class BooleanFilter extends AbstractFilter
 {
+
     /**
      * {@inheritdoc}
      */
@@ -42,20 +43,11 @@ class BooleanFilter extends AbstractFilter
 
     protected function filterProperty(string $property, string $value, ModelCriteria $query, ?string $resourceClass, string $operationName = null, array $context = [])
     {
-        //todo: check if the property is a boolean
-//        if (
-//            !$this->isPropertyEnabled($property, $resourceClass) ||
-//            !$this->isPropertyMapped($property, $resourceClass) ||
-//            !$this->isBooleanField($property, $resourceClass)
-//        ) {
-//            return;
-//        }
         $filterMethod = 'filterBy' . ucfirst($property);
         if (!method_exists($query,$filterMethod)) {
             return;
         }
         $query->$filterMethod($this->normalizeValue($value));
-
     }
 }
 
