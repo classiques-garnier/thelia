@@ -14,7 +14,7 @@ abstract class AbstractFilter implements FilterInterface
     {
     }
 
-    abstract protected function filterProperty(string $property, string $value, ModelCriteria $query, ?string $resourceClass, string $operationName = null, array $context = []);
+    abstract protected function filterProperty(string $property, $value, ModelCriteria $query, ?string $resourceClass, string $operationName = null, array $context = []);
 
 
     /**
@@ -25,11 +25,7 @@ abstract class AbstractFilter implements FilterInterface
         if (!isset($context['filters']) || !\is_array($context['filters'])) {
             return;
         }
-
         foreach ($context['filters'] as $property => $value) {
-            if (!\array_key_exists($property, $this->properties)) {
-                continue;
-            }
             $this->filterProperty($this->denormalizePropertyName($property), $value, $query, $resourceClass, $operationName, $context);
         }
     }

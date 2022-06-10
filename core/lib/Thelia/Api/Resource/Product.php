@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Thelia\Api\Bridge\Propel\Filter\BooleanFilter;
+use Thelia\Api\Bridge\Propel\Filter\OrderFilter;
 use Thelia\Api\Bridge\Propel\Filter\SearchFilter;
 
 #[ApiResource(
@@ -24,6 +25,7 @@ use Thelia\Api\Bridge\Propel\Filter\SearchFilter;
 )]
 #[ApiFilter(BooleanFilter::class, properties: ['visible'] )]
 #[ApiFilter(SearchFilter::class, properties: ['ref' => SearchFilter::STRATEGY_PARTIAL])]
+#[ApiFilter(OrderFilter::class, properties: ['id'], arguments: ['orderParameterName' => 'order'])]
 class Product implements PropelResourceInterface, TranslatableResourceInterface
 {
     #[Groups(['product:read'])]

@@ -41,10 +41,14 @@ class BooleanFilter extends AbstractFilter
         return null;
     }
 
-    protected function filterProperty(string $property, string $value, ModelCriteria $query, ?string $resourceClass, string $operationName = null, array $context = [])
+    protected function filterProperty(string $property, $value, ModelCriteria $query, ?string $resourceClass, string $operationName = null, array $context = [])
     {
+        if (!\array_key_exists($property, $this->properties)) {
+            return;
+        }
+
         $filterMethod = 'filterBy' . ucfirst($property);
-        if (!method_exists($query,$filterMethod)) {
+        if (!method_exists($query, $filterMethod)) {
             return;
         }
         $query->$filterMethod($this->normalizeValue($value));

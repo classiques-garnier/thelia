@@ -44,8 +44,11 @@ class SearchFilter extends AbstractFilter
      * @return void
      * This filter is case insenstive at the moment.
      */
-    protected function filterProperty(string $property, string $value, ModelCriteria $query, ?string $resourceClass, string $operationName = null, array $context = [])
+    protected function filterProperty(string $property, $value, ModelCriteria $query, ?string $resourceClass, string $operationName = null, array $context = [])
     {
+        if (!\array_key_exists($property, $this->properties)) {
+            return;
+        }
         $strategy = $this->properties[$property] ?? self::STRATEGY_EXACT;
 
         $filterMethod = 'filterBy' . ucfirst($property);
