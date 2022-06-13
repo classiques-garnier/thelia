@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Thelia\Api\Bridge\Propel\MetaData;
 
-use ApiPlatform\Doctrine\Common\State\PersistProcessor;
-use ApiPlatform\Doctrine\Common\State\RemoveProcessor;
 use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
@@ -22,6 +20,7 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Thelia\Api\Bridge\Propel\State\PropelCollectionProvider;
 use Thelia\Api\Bridge\Propel\State\PropelItemProvider;
+use Thelia\Api\Bridge\Propel\State\PropelModelProcessor;
 use Thelia\Api\Resource\PropelResourceInterface;
 
 final class PropelResourceCollectionMetadataFactory implements ResourceMetadataCollectionFactoryInterface
@@ -89,9 +88,9 @@ final class PropelResourceCollectionMetadataFactory implements ResourceMetadataC
     private function getProcessor(Operation $operation): string
     {
         if ($operation instanceof DeleteOperationInterface) {
-            return RemoveProcessor::class;
+            return RemovePropelModelProcessor::class;
         }
 
-        return PersistProcessor::class;
+        return PropelModelProcessor::class;
     }
 }

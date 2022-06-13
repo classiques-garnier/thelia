@@ -1,20 +1,17 @@
 <?php
 
-namespace Thelia\Api\Bridge\Propel;
+namespace Thelia\Api\Bridge\Propel\State;
 
-use ApiPlatform\Core\DataPersister\DataPersisterInterface;
 use ApiPlatform\Core\Exception\InvalidResourceException;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Thelia\Api\Resource\PropelResourceInterface;
 use Thelia\Api\Resource\TranslatableResourceInterface;
 
-class DataPersister implements DataPersisterInterface
+class PropelModelProcessor implements ProcessorInterface
 {
 
-    public function supports($data): bool
-    {
-        return \is_object($data) && is_subclass_of($data, PropelResourceInterface::class);
-    }
 
     /**
      * @param PropelResourceInterface $data
@@ -22,12 +19,15 @@ class DataPersister implements DataPersisterInterface
      * @throws \ReflectionException
      * @throws InvalidResourceException
      */
-    public function persist($data)
+    public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
+        if (!\is_object($data) || !is_subclass_of($data, PropelResourceInterface::class)) {
+            return;
+        }
         $propelModelClass = $data::getPropelModelClass();
 
         /** @var ModelCriteria $queryClass */
-        $queryClass = $propelModelClass.'Query';
+        $queryClass = $propelModelClass . 'Query';
         $propelModel = $data->getId() ? $queryClass::create()->filterById($data->getId())->findOne() : new $propelModelClass();
 
         if (null === $propelModel) {
@@ -40,8 +40,8 @@ class DataPersister implements DataPersisterInterface
             }
 
             $possibleGetters = [
-                'get'.ucfirst(substr($methodName, 3)),
-                'is'.ucfirst(substr($methodName, 3)),
+                'get' . ucfirst(substr($methodName, 3)),
+                'is' . ucfirst(substr($methodName, 3)),
             ];
 
             $availableMethods = array_filter(array_intersect($possibleGetters, get_class_methods($data)));
@@ -58,7 +58,7 @@ class DataPersister implements DataPersisterInterface
             }
 
             $value = null;
-            while (!empty($availableMethods) && ($value === null || empty($theliaValue))) {
+            while (!empty($availableMethods) && ($value === null)) {
                 $method = array_pop($availableMethods);
                 $value = $data->$method();
             }
@@ -72,8 +72,12 @@ class DataPersister implements DataPersisterInterface
 
         if (is_subclass_of($data, TranslatableResourceInterface::class)) {
             foreach ($data->getI18ns() as $i18n) {
-                $i18nGetters = array_filter(get_class_methods($i18n), function ($method) {return str_starts_with($method, 'get');});
-                usort($i18nGetters, function ($a, $b) {return $a !== 'getLocale'; });
+                $i18nGetters = array_filter(get_class_methods($i18n), function ($method) {
+                    return str_starts_with($method, 'get');
+                });
+                usort($i18nGetters, function ($a, $b) {
+                    return $a !== 'getLocale';
+                });
                 foreach ($i18nGetters as $i18nGetter) {
                     if ($i18nGetter === 'getId') {
                         continue;

@@ -12,13 +12,14 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Thelia\Api\Bridge\Propel\Extension\FilterExtension;
+use Thelia\Api\Bridge\Propel\MetaData\PropelResourceCollectionMetadataFactory;
 use Thelia\Core\Service\ConfigCacheService;
 use Thelia\Log\Tlog;
 use Thelia\Model\ConfigQuery;
 use Thelia\Model\Module;
 use Thelia\Model\ModuleQuery;
-use Thelia\Api\Bridge\Propel\Filter\BooleanFilter;
 
 
 return function (ContainerConfigurator $configurator): void {
@@ -48,6 +49,10 @@ return function (ContainerConfigurator $configurator): void {
         ->autoconfigure();
 
     $serviceConfigurator->get(FilterExtension::class)->arg('$locator', service('api_platform.filter_locator'));
+    //Decorates ResourceMetadataCollection
+    $serviceConfigurator->set(PropelResourceCollectionMetadataFactory::class)
+        ->decorate('api_platform.metadata.resource.metadata_collection_factory')
+        ->args([service('.inner')]);
 
     if (ConfigQuery::isSmtpEnable()) {
         $dsn = 'smtp://';

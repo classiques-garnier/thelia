@@ -3,7 +3,6 @@
 namespace Thelia\Api\Bridge\Propel\Filter;
 
 
-use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
@@ -67,7 +66,7 @@ class OrderFilter extends AbstractFilter
         }
         $field = array_key_first($value);
         $direction = $this->normalizeValue($value[$field]);
-        
+
         $query->orderBy($field, $direction);
     }
 
